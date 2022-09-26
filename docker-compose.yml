@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  mysql:
+    container_name: mysql
+    image: mariadb:5.5
+    restart: always
+    ports:
+      - 3302:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: "django*2121"
+      MYSQL_DATABASE: "dbprueba"
+      MYSQL_USER: "jjmiranda"
+      MYSQL_PASSWORD: "django"
+      MYSQL_PORT: "3306"
+    volumes:
+      - ./schemas:/var/lib/mysql:rw
+  api:
+    build: .
+    working_dir: /api
+    container_name: 'prueba_backend'
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8004:8000"
+    volumes: # is no too necesary in prod. environment
+      - .:/api
+    depends_on:
+      - mysql
