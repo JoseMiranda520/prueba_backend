@@ -15,8 +15,7 @@ from rest_framework.views import APIView
 from .filters import UserFilter, ProfileFilter, PilotFilter
 from .models import *
 from .resources import UserResource
-from .serializers import (UserSerializer, GroupSerializer, ProfileSerializer, ProfileDetailedSerializer,
-                        PilotSerializer, GroupNameSerializer)
+from .serializers import *
 import json
 
 
@@ -152,3 +151,30 @@ class Login(LoggingMixin, ObtainJSONWebToken):
             super(Login, self).handle_log()
 
 
+class Viajes(viewsets.ModelViewSet):
+    """
+    vista para ingresar y aceptar viajes
+    @author: Jose Javier Miranda
+    """
+    queryset = Viajes.objects.all()
+    serializer_class = ViajesSerializer
+
+    
+    def create(self, request, *args, **kwargs):
+
+        new_serializer = ViajesSerializer(data=request.data)
+        if new_serializer.is_valid():
+            viaje = new_serializer.save()
+            return Response({'msj':'viaje solicitado', 'id':viaje.pk}, status=status.HTTP_201_CREATED)
+        return Response(new_serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+
+    @action(detail=False, methods=['PUT'], url_path='edit')
+    def asignar_viaje(self, request, *args, **kwargs):
+
+        new_serializer = AsignarViajeSerializer(data=request.data)
+        if new_serializer.is_valid():
+            id = new_serializer.data.get('id')
+            setquery = Viajes.objects.filter(pk=id, estado='solicitado').update(**new_serializer.validated_data)
+            return Response(setquery.values(), status=status.HTTP_201_CREATED)
+        return Response(new_serializer.errors,status=status.HTTP_400_BAD_REQUEST)

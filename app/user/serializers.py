@@ -5,6 +5,31 @@ from rest_framework import serializers
 from .models import *
 
 
+class AsignarViajeSerializer(serializers.ModelSerializer):
+    
+    id = serializers.IntegerField()
+    class Meta:
+        model = Viajes
+        fields = (
+            'id',
+            'placa_vehiculo',
+            'estado'
+        )
+
+    def validate(self, data):
+        if ('id' not in data or 'placa_vehiculo' not in data or 'estado' not in data):
+            raise serializers.ValidationError(""" los campos "id", "placa_vehiculo" y "estado" son requeridos""")
+        return data
+
+
+class ViajesSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Viajes
+        fields = '__all__'
+
+
+
 class PilotSerializer(BaseModelSerializer):
     class Meta(BaseModelSerializer.Meta):
         model = Pilot

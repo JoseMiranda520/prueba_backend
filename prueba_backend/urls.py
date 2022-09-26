@@ -7,7 +7,7 @@ from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify
 from rest_framework.documentation import include_docs_urls
 
 
-from app.user.views import UserViewSet, GroupViewSet, PilotViewSet, ProfileViewSet, Login, GroupNameViewSet
+from app.user.views import UserViewSet, GroupViewSet, PilotViewSet, ProfileViewSet, Login, GroupNameViewSet, Viajes
 
 
 
@@ -23,6 +23,7 @@ router.register(r'groups', GroupViewSet)
 router.register(r'groups_name', GroupNameViewSet, basename='groups_name')
 router.register(r'pilots', PilotViewSet)
 router.register(r'profile', ProfileViewSet)
+router.register(r'viajes', Viajes)
 
 
 
